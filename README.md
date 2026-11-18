@@ -1,4 +1,4 @@
-# cyth.dev
+# mohneesh.in
 
 Personal portfolio and writing site for Mohneesh Naidu, built around a
 textile-inspired visual system: marked cloth, running stitches, and switchable
