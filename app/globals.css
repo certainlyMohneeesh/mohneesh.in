@@ -1,0 +1,896 @@
+@import "tailwindcss";
+
+/* ─── Dye lots ───────────────────────────────────────────────
+ * The whole site is one bolt of cloth. A "dye lot" is a complete palette:
+ *   bg / raised   the cloth and a slightly lifted layer of it
+ *   ink / muted / subtle   text, three steps (all ≥ 4.5:1 on bg + raised)
+ *   chalk         the marking colour — rough-notation, stitch, focus
+ *   sun           the highlighter — "live" dots and highlight marks
+ * Switch with <html data-dye="…">. Nothing else in the codebase hardcodes a
+ * colour; add new needs here.
+ *   jamun  black-plum ground, pistachio ink, gulkand-pink chalk, saffron
+ *   neel   indigo ink on pale indigo-washed cloth, madder-magenta chalk
+ *   hara   bottle-green ground, rose-milk ink, turmeric chalk, madder
+ * ─────────────────────────────────────────────────────────── */
+:root,
+:root[data-dye="jamun"] {
+  color-scheme: dark;
+  --bg: #1a1022;
+  --raised: #251830;
+  --ink: #e8f1d9;
+  --muted: #b1bca3;
+  --subtle: #8d987f;
+  --chalk: #ff8fb5;
+  --sun: #ffc44d;
+  --on-chalk: #1a1022;
+}
+:root[data-dye="neel"] {
+  color-scheme: light;
+  --bg: #e3e8f4;
+  --raised: #d6ddee;
+  --ink: #121a4d;
+  --muted: #454c7c;
+  --subtle: #525a87;
+  --chalk: #b81d52;
+  --sun: #f2b100;
+  --on-chalk: #ffffff;
+}
+:root[data-dye="hara"] {
+  color-scheme: dark;
+  --bg: #0b2622;
+  --raised: #12342e;
+  --ink: #ffe4ec;
+  --muted: #d3aebb;
+  --subtle: #b592a0;
+  --chalk: #ffc93c;
+  --sun: #ff7a66;
+  --on-chalk: #0b2622;
+}
+
+:root {
+  --line: color-mix(in oklab, var(--ink) 11%, transparent);
+  --line-strong: color-mix(in oklab, var(--ink) 26%, transparent);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+  --shell: 40rem;
+
+  /* 8×4 squiggle used as a mask for hand-drawn link underlines */
+  --squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath d='M0 2 Q2 0 4 2 T8 2' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E");
+
+  interpolate-size: allow-keywords;
+}
+/* Wide pages (work grid) move the selvedge out with them */
+:root:has(.shell-wide) {
+  --stitch-span: 62rem;
+}
+
+/* Fonts are emitted unconditionally (`static`) so plain CSS can use them. */
+@theme static {
+  --font-sans: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif,
+    system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, "SF Mono",
+    Menlo, Consolas, monospace;
+  --font-hand: var(--font-hand), "Patrick Hand", "Segoe Print", cursive;
+}
+
+/* Utilities: bg-bg, bg-raised, text-fg, text-muted, text-subtle, text-chalk,
+ * text-sun, border-line, border-line-strong … */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-raised: var(--raised);
+  --color-fg: var(--ink);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-chalk: var(--chalk);
+  --color-sun: var(--sun);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+}
+
+/* ─── Base ───────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    background: var(--bg);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-wrap: pretty;
+    overflow-x: clip;
+  }
+
+  body:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--chalk);
+    color: var(--on-chalk);
+  }
+
+  /* Focus is a running stitch */
+  :focus-visible {
+    outline: 2px dashed var(--chalk);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 3px;
+  }
+}
+
+/* Woven-cloth texture: static, painted once, no blend modes, no animation. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      color-mix(in oklab, var(--ink) 3.5%, transparent) 0 1px,
+      transparent 1px 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--ink) 3.5%, transparent) 0 1px,
+      transparent 1px 4px
+    );
+}
+
+/* ─── Layout ─────────────────────────────────────────────── */
+@utility shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--shell);
+  padding-inline: 1.25rem;
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+}
+@utility shell-wide {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 62rem;
+  padding-inline: 1.25rem;
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+}
+
+/* ─── The stitch ─────────────────────────────────────────────
+ * A fixed running-stitch line down the selvedge. The faint dashes are the
+ * pattern guide; the bright dashes are the thread, sewn by scroll position
+ * through a scroll-driven animation (zero JS). Browsers without
+ * `animation-timeline` keep just the guide.
+ * ─────────────────────────────────────────────────────────── */
+.stitch {
+  position: fixed;
+  inset-block: 0;
+  left: max(9px, calc(50% - var(--stitch-span, var(--shell)) / 2 - 1.75rem));
+  width: 2px;
+  transition: left 0.4s var(--ease-out);
+  z-index: 30;
+  pointer-events: none;
+}
+.stitch::before,
+.stitch-thread {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--line) 0 7px,
+    transparent 7px 14px
+  );
+}
+.stitch-thread {
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--chalk) 0 7px,
+    transparent 7px 14px
+  );
+  clip-path: inset(0 0 100% 0);
+}
+.stitch-needle {
+  position: absolute;
+  top: 0;
+  left: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--chalk);
+  opacity: 0;
+}
+@supports (animation-timeline: scroll()) {
+  .stitch-thread {
+    animation: sew linear both;
+    animation-timeline: scroll(root);
+  }
+  .stitch-needle {
+    animation: needle linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes sew {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes needle {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+  }
+  2% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    translate: 0 calc(100dvh - 6px);
+  }
+}
+
+/* ─── Hand-drawn links (CSS only) ────────────────────────── */
+.ln {
+  position: relative;
+  display: inline-block;
+  color: var(--ink);
+}
+.ln::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -4px;
+  height: 4px;
+  background: var(--chalk);
+  -webkit-mask: var(--squiggle) repeat-x 0 100% / 8px 4px;
+  mask: var(--squiggle) repeat-x 0 100% / 8px 4px;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.3s var(--ease-out);
+}
+.ln:focus-visible::after,
+.ln[aria-current="page"]::after {
+  clip-path: inset(0 0 0 0);
+}
+@media (hover: hover) {
+  .ln:hover::after {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ─── rough-notation tones ───────────────────────────────────
+ * The library draws `stroke="currentColor"`, so recolouring = CSS `color`
+ * on the injected <svg class="rough-annotation">. Dye lots recolour live.
+ * ─────────────────────────────────────────────────────────── */
+.mark > svg.rough-annotation {
+  color: var(--chalk);
+}
+.mark[data-tone="sun"] > svg.rough-annotation {
+  color: var(--sun);
+}
+.mark[data-tone="ink"] > svg.rough-annotation {
+  color: var(--ink);
+}
+.mark[data-type="highlight"] > svg.rough-annotation {
+  opacity: 0.4;
+}
+
+/* ─── Handwritten margin note ────────────────────────────── */
+.note {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  line-height: 1.15;
+  color: var(--chalk);
+  rotate: -2deg;
+}
+.note svg {
+  flex: none;
+  width: 2.25rem;
+  height: 1.75rem;
+  margin-top: 0.15rem;
+}
+.note path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: write 0.7s var(--ease-out) var(--note-delay, 2.4s) forwards;
+}
+.note-text {
+  clip-path: inset(0 100% 0 0);
+  animation: wipe 0.8s steps(14, end) calc(var(--note-delay, 2.4s) + 0.25s) forwards;
+}
+@keyframes write {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes wipe {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@media (min-width: 1100px) {
+  .note-margin {
+    position: absolute;
+    left: calc(100% + 1.75rem);
+    top: var(--note-top, 0);
+    width: max-content;
+    max-width: 11rem;
+  }
+}
+
+/* ─── Pinked-edge swatch ─────────────────────────────────────
+ * Zig-zag top + bottom edges, like cloth cut with pinking shears. Pure CSS
+ * mask, no extra elements. `--z` is the tooth size.
+ * ─────────────────────────────────────────────────────────── */
+.pinked {
+  --z: 10px;
+  -webkit-mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)
+      bottom / var(--z) 51% repeat-x,
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top /
+      var(--z) 51% repeat-x;
+  mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)
+      bottom / var(--z) 51% repeat-x,
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top /
+      var(--z) 51% repeat-x;
+}
+
+/* Image-less project art: a dye-lot-aware woven tile */
+.tile {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(45deg, color-mix(in oklab, var(--chalk) 11%, transparent) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(-45deg, color-mix(in oklab, var(--sun) 8%, transparent) 0 2px, transparent 2px 9px),
+    var(--raised);
+}
+
+/* ─── Components ─────────────────────────────────────────── */
+@layer components {
+  .tag {
+    display: inline-block;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--muted);
+    border: 1px dashed var(--line-strong);
+    border-radius: 999px;
+    padding: 1px 10px;
+  }
+  .tag-link {
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .tag-link:hover {
+    color: var(--ink);
+    border-color: var(--chalk);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.875rem;
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease,
+      translate 0.25s var(--ease-out);
+  }
+  .btn:hover {
+    border-color: var(--chalk);
+  }
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  .btn-primary {
+    color: var(--on-chalk);
+    background: var(--chalk);
+    border: 1px solid var(--chalk);
+  }
+  .btn-primary:hover:not(:disabled) {
+    translate: 0 -1px;
+  }
+
+  /* Ruled-paper fields */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line-strong);
+    padding: 0.6rem 0;
+    font: inherit;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  .field::placeholder {
+    color: var(--subtle);
+  }
+  .field:focus {
+    border-bottom-style: dashed;
+    border-bottom-color: var(--chalk);
+  }
+
+  /* Journal list: siblings dim on hover (hover-capable devices only) */
+  .dim-siblings:hover > li {
+    opacity: 0.45;
+  }
+  .dim-siblings:hover > li:hover {
+    opacity: 1;
+  }
+
+  /* Back to top: appears after the first screen via scroll-driven opacity */
+  .to-top {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: 50%;
+    background: var(--bg);
+    color: var(--muted);
+    font-family: var(--font-hand);
+    font-size: 1.25rem;
+    opacity: 0;
+    pointer-events: none;
+  }
+  @supports (animation-timeline: scroll()) {
+    .to-top {
+      animation: to-top-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 600px;
+    }
+  }
+  .to-top:hover {
+    color: var(--chalk);
+    border-color: var(--chalk);
+  }
+}
+
+@keyframes to-top-in {
+  to {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ─── Experience ledger (native <details>, zero JS) ──────── */
+.ledger details {
+  border-top: 1px dashed var(--line-strong);
+}
+.ledger details:last-child {
+  border-bottom: 1px dashed var(--line-strong);
+}
+.ledger summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 1rem;
+  padding: 1rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .ledger summary {
+    grid-template-columns: 8rem 1fr auto;
+  }
+}
+.ledger summary::-webkit-details-marker {
+  display: none;
+}
+.ledger summary::after {
+  content: "+";
+  grid-row: 1;
+  grid-column: -2 / -1;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  line-height: 1.2;
+  color: var(--subtle);
+}
+.ledger details[open] > summary::after {
+  content: "–";
+  color: var(--chalk);
+}
+.ledger details::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition: block-size 0.35s var(--ease-out),
+    content-visibility 0.35s allow-discrete;
+}
+.ledger details[open]::details-content {
+  block-size: auto;
+}
+
+/* ─── Project drawer (native <dialog>) ───────────────────── */
+.sheet {
+  margin: 0 0 0 auto;
+  padding: 0;
+  height: 100dvh;
+  max-height: 100dvh;
+  width: min(30rem, 100vw);
+  max-width: 100vw;
+  overflow-y: auto;
+  color: var(--ink);
+  background: var(--bg);
+  border: 0;
+  border-left: 1px dashed var(--line-strong);
+
+  translate: 100% 0;
+  opacity: 0;
+  transition: translate 0.45s var(--ease-out), opacity 0.3s ease,
+    overlay 0.45s allow-discrete, display 0.45s allow-discrete;
+}
+.sheet[open] {
+  translate: 0 0;
+  opacity: 1;
+}
+@starting-style {
+  .sheet[open] {
+    translate: 100% 0;
+    opacity: 0;
+  }
+}
+.sheet::backdrop {
+  background: color-mix(in oklab, var(--bg) 0%, transparent);
+  transition: background-color 0.4s ease, overlay 0.4s allow-discrete,
+    display 0.4s allow-discrete;
+}
+.sheet[open]::backdrop {
+  background: color-mix(in oklab, var(--bg) 72%, transparent);
+}
+@starting-style {
+  .sheet[open]::backdrop {
+    background: color-mix(in oklab, var(--bg) 0%, transparent);
+  }
+}
+
+/* ─── Command palette (native <dialog>) ──────────────────── */
+.palette {
+  margin: 14vh auto auto;
+  padding: 0;
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: 70dvh;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px dashed var(--chalk);
+  border-radius: 10px;
+  overflow: hidden;
+  opacity: 0;
+  translate: 0 -6px;
+  transition: opacity 0.18s ease, translate 0.25s var(--ease-out),
+    overlay 0.2s allow-discrete, display 0.2s allow-discrete;
+}
+.palette[open] {
+  opacity: 1;
+  translate: 0 0;
+}
+@starting-style {
+  .palette[open] {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+}
+.palette::backdrop {
+  background: color-mix(in oklab, var(--bg) 70%, transparent);
+}
+
+/* ─── View transitions ───────────────────────────────────────
+ * 1. Route change — the next page "unrolls" from the top edge like a bolt
+ *    of cloth; the old one lifts away. Header/background never move.
+ * 2. Dye switch — the new colour bleeds out from the clicked swatch.
+ * Both are browser-native snapshots: no JS animation, no library.
+ * ─────────────────────────────────────────────────────────── */
+::view-transition-group(root) {
+  animation: none;
+}
+::view-transition-old(root) {
+  display: none;
+}
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(.fold) {
+  animation: 140ms var(--ease-in) both fold-out;
+}
+::view-transition-new(.unfold) {
+  animation: 520ms var(--ease-out) 40ms both unfold-in;
+}
+@keyframes fold-out {
+  to {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+@keyframes unfold-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0.2;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+:root[data-vt="dye"]::view-transition-old(root) {
+  display: block;
+  animation: none;
+}
+:root[data-vt="dye"]::view-transition-new(root) {
+  animation: 650ms var(--ease-out) both bleed;
+}
+:root[data-vt="dye"] header,
+:root[data-vt="dye"] .stitch {
+  view-transition-name: none;
+}
+@keyframes bleed {
+  from {
+    clip-path: circle(0 at var(--bleed-x, 50%) var(--bleed-y, 0));
+  }
+  to {
+    clip-path: circle(150vmax at var(--bleed-x, 50%) var(--bleed-y, 0));
+  }
+}
+
+/* ─── Blog prose ─────────────────────────────────────────── */
+.prose-blog {
+  font-size: 1.0625rem;
+  line-height: 1.78;
+  color: var(--muted);
+}
+.prose-blog > * + * {
+  margin-top: 1.25rem;
+}
+.prose-blog h1,
+.prose-blog h2,
+.prose-blog h3 {
+  color: var(--ink);
+  line-height: 1.2;
+}
+.prose-blog h1 {
+  font-size: 1.9rem;
+  margin-top: 2.75rem;
+}
+.prose-blog h2 {
+  font-size: 1.45rem;
+  margin-top: 2.75rem;
+}
+.prose-blog h3 {
+  font-size: 1.15rem;
+  margin-top: 2rem;
+}
+.prose-blog .heading-anchor {
+  margin-left: 0.5rem;
+  color: var(--chalk);
+  font-family: var(--font-hand);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.prose-blog h2:hover .heading-anchor,
+.prose-blog h3:hover .heading-anchor,
+.prose-blog .heading-anchor:focus-visible {
+  opacity: 1;
+}
+.prose-blog strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.prose-blog em {
+  font-style: normal;
+  color: var(--ink);
+}
+.prose-blog a {
+  color: var(--ink);
+  text-decoration: underline wavy var(--chalk);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+.prose-blog ul,
+.prose-blog ol {
+  padding-left: 0;
+  list-style: none;
+}
+.prose-blog li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+.prose-blog li + li {
+  margin-top: 0.5rem;
+}
+.prose-blog ul > li::before {
+  content: "–";
+  position: absolute;
+  left: 0.25rem;
+  color: var(--chalk);
+}
+.prose-blog ol {
+  counter-reset: item;
+}
+.prose-blog ol > li {
+  counter-increment: item;
+}
+.prose-blog ol > li::before {
+  content: counter(item) ".";
+  position: absolute;
+  left: 0;
+  color: var(--chalk);
+  font-variant-numeric: tabular-nums;
+}
+.prose-blog blockquote {
+  padding: 0.25rem 0 0.25rem 1.75rem;
+  color: var(--ink);
+  font-size: 1.15rem;
+}
+.prose-blog hr {
+  border: 0;
+  border-top: 1px dashed var(--line-strong);
+  margin-block: 2.5rem;
+}
+.prose-blog img {
+  border-radius: 6px;
+  max-width: 100%;
+  height: auto;
+}
+.prose-blog pre {
+  overflow-x: auto;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+@media (hover: none), (pointer: coarse), (max-width: 48rem) {
+  .code-copy {
+    min-height: 2.75rem;
+    opacity: 1;
+  }
+}
+.prose-blog pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+.prose-blog :not(pre) > code {
+  padding: 1px 6px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  color: var(--ink);
+}
+
+/* ─── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* ─── Toast ──────────────────────────────────────────────── */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes toast-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
+/* ─── Ledger cells + cursor-following project peek ───────── */
+.ledger-period {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 0.875rem;
+  color: var(--subtle);
+  font-variant-numeric: tabular-nums;
+}
+.ledger-title {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+@media (min-width: 640px) {
+  .ledger-title {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+.peek {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .peek {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 35;
+    width: 16rem;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .peek-card {
+    margin: -5.5rem 0 0 1.75rem;
+    opacity: 0;
+    scale: 0.94;
+    transition: opacity 0.2s ease, scale 0.3s var(--ease-out);
+  }
+  .peek[data-show="true"] .peek-card {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* Code stays dark in every lot; in the dark lots it takes the cloth's own
+ * raised tone instead of shiki's grey-blue. Token colours are untouched. */
+:root:not([data-dye="neel"]) .prose-blog pre {
+  background-color: var(--raised) !important;
+}

@@ -1,0 +1,307 @@
+{
+  "projects": [
+    {
+      "name": "MewCP - Stateless MCP Integration Platform",
+      "description": "A stateless Model Context Protocol (MCP) integration platform.",
+      "category": "systems",
+      "featured": true,
+      "year": "2026",
+      "architectureHighlight": "Stateless by design: no server-held session state between MCP calls.",
+      "tags": [
+        "Model Context Protocol",
+        "Stateless",
+        "Integration Platform"
+      ],
+      "links": []
+    },
+    {
+      "name": "Nesternity - The Calmest CRM",
+      "description": "Nesternity is your all-in-one workspace for managing clients, projects, tasks, and invoices — all from one calm, cozy hub.",
+      "category": "web",
+      "featured": true,
+      "year": "2026",
+      "architectureHighlight": "Supabase Auth over PostgreSQL, Zustand client state, invoices rendered with React-PDF.",
+      "href": "https://nesternity.cyth.app",
+      "image": "https://res.cloudinary.com/dj3dp0ccy/image/upload/f_auto/q_auto/v1776791713/nesternity_xq4rmc.png",
+      "tags": [
+        "NextJS 16",
+        "PostgreSQL",
+        "Supabase Auth",
+        "Zustand",
+        "React-PDF-Renderer",
+        "TailwindCSS 4",
+        "Dnd Kit"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://nesternity.cyth.app",
+          "icon": "globe"
+        },
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/nesternity",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "MGNREGA India - Data Visualization",
+      "description": "A data visualization project that presents insights from the Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA) scheme in India, utilizing shadcn to create interactive charts and graphs for better understanding of employment trends and fund allocation.",
+      "category": "web",
+      "featured": true,
+      "year": "2026",
+      "architectureHighlight": "shadcn charts over live data.gov.in data, with voice input.",
+      "href": "https://mgnrega.cyth.app",
+      "image": "/mgnregapost.png",
+      "tags": [
+        "React 19",
+        "NextJS 16",
+        "data.gov.in API",
+        "Voice Input",
+        "Figma"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://mgnrega.cyth.app",
+          "icon": "globe"
+        },
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/mgnrega",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "Deckhand - Control Your Presentation Decks from Anywhere",
+      "description": "A web application that allows users to control their presentation decks remotely using web socket by mobile devices also use as a teleprompter, enhancing the presentation experience with seamless navigation and interactivity.",
+      "category": "systems",
+      "featured": true,
+      "year": "2026",
+      "architectureHighlight": "WebSocket relay lets a phone drive slides and a teleprompter.",
+      "href": "https://deckhand.nesternity.cyth.app",
+      "image": "/deckhandpost.png",
+      "tags": [
+        "React 19",
+        "NextJS 16",
+        "WebSocket",
+        "Teleprompter",
+        "DigitalOcean Droplet"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://deckhand.nesternity.cyth.app",
+          "icon": "globe"
+        },
+        {
+          "name": "Source Frontend",
+          "href": "https://github.com/certainlyMohneeesh/deckhand",
+          "icon": "github"
+        },
+        {
+          "name": "Source Backend",
+          "href": "https://github.com/certainlyMohneeesh/deckhand-socket",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "Parathaful - A Concept Showcase",
+      "description": "A concept showcase website featuring unique and bold designs, inspired by the vibrant culture of parathas.",
+      "category": "web",
+      "featured": false,
+      "year": "2025",
+      "architectureHighlight": "GSAP-driven motion on Next.js 15 and Tailwind 4, designed in Figma.",
+      "href": "https://parathaful.cyth.app",
+      "image": "/parathafulpost.png",
+      "tags": [
+        "React 19",
+        "NextJS 15",
+        "GSAP Animations",
+        "TailwindCSS 4",
+        "Figma"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://parathaful.cyth.app",
+          "icon": "globe"
+        },
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/parathaful",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "Farmwise",
+      "description": "The Crop Disease Prediction project is designed to help farmers detect diseases in crops, specifically cotton, using machine learning and computer vision techniques.",
+      "category": "ai-ml",
+      "featured": false,
+      "year": "2025",
+      "architectureHighlight": "ResNet50 and VGG16 CNN classifiers behind a FastAPI service in Docker.",
+      "image": "/farmwise.png",
+      "tags": [
+        "Python",
+        "FastAPI",
+        "Docker",
+        "CNN - Resnet50, VGG16",
+        "Node.js",
+        "MongoDB",
+        "OpenCV"
+      ],
+      "links": [
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/FarmWise",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "Portfolio 2024 - Manga Style",
+      "description": "A modern portfolio showcasing frontend skills with manga styled bento layout.",
+      "category": "web",
+      "featured": false,
+      "year": "2024",
+      "architectureHighlight": "Manga-style bento layout animated with Framer Motion, hosted on Vercel.",
+      "href": "https://mohneesh.cyth.me",
+      "image": "/MangaPortfolio.png",
+      "tags": [
+        "Framer Motion",
+        "TailwindCSS",
+        "Vercel",
+        "Canva"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://mohneesh.cyth.me",
+          "icon": "globe"
+        },
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/portfolio-blog-",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "CythBlog - My Personal Blogs",
+      "description": "A blog website where I share my thoughts and experience",
+      "category": "web",
+      "featured": false,
+      "year": "2024",
+      "architectureHighlight": "MongoDB-backed Next.js blog with rich markdown rendering.",
+      "href": "https://blog.cyth.me",
+      "image": "/Blog.png",
+      "tags": [
+        "React 19",
+        "MongoDB",
+        "NextJS 14",
+        "Feature rich markdown support"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://blog.cyth.me",
+          "icon": "globe"
+        },
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/Blog",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "Task Manager",
+      "description": "A modern, feature-rich task management application built using Next.js and shadcn/ui components, designed to streamline task organization and improve productivity.",
+      "category": "web",
+      "featured": false,
+      "year": "2024",
+      "architectureHighlight": "Next.js 14 app on shadcn/ui components with Framer Motion transitions.",
+      "href": "https://tskman.cyth.me",
+      "image": "/taskmanager.png",
+      "tags": [
+        "NextJS 14",
+        "TypeScript",
+        "TailwindCSS",
+        "Framer Motion",
+        "React 19"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://tskman.cyth.me",
+          "icon": "globe"
+        },
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/task-manager",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "MySchedule",
+      "description": "Manage your time efficiently with our intuitive scheduling platform. Plan your days, organize meetings, and stay on top of your schedule.",
+      "category": "web",
+      "featured": false,
+      "year": "2024",
+      "architectureHighlight": "PostgreSQL-backed scheduling app on Next.js 14.",
+      "href": "https://scheduler-calendar.vercel.app",
+      "image": "/MySchedule.png",
+      "tags": [
+        "NextJS 14",
+        "TailwindCSS",
+        "postgreSQL",
+        "Figma"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://scheduler-calendar.vercel.app",
+          "icon": "globe"
+        },
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/scheduler-calendar",
+          "icon": "github"
+        }
+      ]
+    },
+    {
+      "name": "OTPgen - OTP Generator",
+      "description": "A simple and secure OTP generator for two-factor authentication, ensuring your accounts are protected with an additional layer of security.",
+      "category": "web",
+      "featured": false,
+      "year": "2024",
+      "architectureHighlight": "One-time passcodes sent through the Twilio API from a TypeScript Next.js app.",
+      "href": "https://otpgen.cyth.me",
+      "image": "/otpgen.png",
+      "tags": [
+        "NextJS 14",
+        "TailwindCSS",
+        "TypeScript",
+        "Twilio API"
+      ],
+      "links": [
+        {
+          "name": "Live Link",
+          "href": "https://otpgen.cyth.me",
+          "icon": "globe"
+        },
+        {
+          "name": "Source",
+          "href": "https://github.com/certainlyMohneeesh/OTP_Generator",
+          "icon": "github"
+        }
+      ]
+    }
+  ]
+}
