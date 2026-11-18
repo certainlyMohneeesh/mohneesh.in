@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# cyth.dev
 
-## Getting Started
+Personal portfolio and writing site for Mohneesh Naidu, built around a
+textile-inspired visual system: marked cloth, running stitches, and switchable
+dye palettes.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router and React 19
+- TypeScript and Tailwind CSS 4
+- MDX articles rendered on the server with Shiki syntax highlighting
+- Local JSON and MDX files for project, experience, and blog content
+
+## Getting started
+
+Use [Bun](https://bun.sh/) to install the dependencies from the lockfile and
+start the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+| --- | --- |
+| `bun dev` | Start the local development server |
+| `bun run lint` | Run ESLint |
+| `bun run build` | Create and verify an optimized production build |
+| `bun start` | Serve the production build locally |
 
-## Learn More
+## Site structure
 
-To learn more about Next.js, take a look at the following resources:
+- `/` — introduction, experience, featured projects, and recent writing
+- `/projects` — filterable project showcase with project detail drawers
+- `/blog` — published articles with tag filters
+- `/blog/[slug]` — statically generated article pages
+- `/contact` — contact form and external profiles
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Most pages use Server Components. Interactive features such as project filters,
+the command palette, contact controls, and dye switcher are kept in focused
+client components.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Updating content
 
-## Deploy on Vercel
+- **Projects:** edit `data/projects.json`. Project images may use Cloudinary
+  URLs; the allowed remote image host is configured in `next.config.ts`.
+- **Experience and education:** edit `data/experience.json`.
+- **Writing:** add an `.mdx` file under `data/blog/` with frontmatter for
+  `title`, `description`, `date`, `tags`, and `isPublished`. The filename
+  becomes the article slug. Articles are pre-rendered at build time, so rebuild
+  and redeploy after adding or changing a post.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Design and performance
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The interface draws on textile details: running stitches, pinked edges, and
+three switchable dye palettes. It favors CSS and browser-native transitions,
+honors reduced-motion preferences, and keeps client-side JavaScript limited
+to interactive features.
